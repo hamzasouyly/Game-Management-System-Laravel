@@ -9,7 +9,7 @@ class Specialisation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'classes_id', 'slug'];
+    protected $fillable = ['title', 'slug'];
 
     public function getRouteKeyName(){
         return 'slug';
@@ -17,6 +17,6 @@ class Specialisation extends Model
 
     public function classes() {
 
-        return $this->hasMany(Classes::class);
+        return $this->belongsToMany(Classes::class, 'classes_specialisations');
     }
 }

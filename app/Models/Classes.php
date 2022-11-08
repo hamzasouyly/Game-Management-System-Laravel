@@ -36,7 +36,7 @@ class Classes extends Model
 
     public function specialisation() {
 
-        return $this->hasMany(Specialisation::class);
+        return $this->belongsToMany(Specialisation::class, 'classes_specialisations');
     }
 
     public function spells() {

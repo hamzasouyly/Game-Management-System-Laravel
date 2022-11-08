@@ -8,6 +8,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\ShipsController;
 use App\Http\Controllers\SpecialisationController;
 use App\Http\Controllers\SpellsController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,14 @@ Route::apiResource('specialisations', SpecialisationController::class);
 Route::post('/specialisations/{slug}', [SpecialisationController::class, 'update']);
 Route::apiResource('ships', ShipsController::class);
 Route::post('/ships/{slug}', [ShipsController::class, 'update']);
+
+// login & logout
+Route::middleware('auth:sanctum', 'role:admin')->group(function () {
+    
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::get('/logout', [UserController::class, 'logout']);
+    Route::get('/users', [UserController::class, 'index']);
+});
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+
