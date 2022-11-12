@@ -34,10 +34,10 @@ class RolesController extends Controller
         //
         
 
-        $classes = Classes::all();
-        return view('create') -> with([
-            'classes' => $classes
-        ]);
+        // $classes = Classes::all();
+        // return view('create') -> with([
+        //     'classes' => $classes
+        // ]);
         
     }
 
@@ -63,13 +63,23 @@ class RolesController extends Controller
         ]);
 
 
-        Roles::create([
+        $roles = Roles::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'discription' => $request->discription,
             'image' => $image_name,
-            'classes_id' => $request->classes_id,
             ]);
+
+            $classesList = $request->classes;        
+            $classes = explode(",", $classesList);
+
+            $classesIds = array();
+            foreach($classes as $classe) {
+            $classesIds[] = Classes::select('id')->where('id', $classe)->first()->id;
+            }
+
+            
+            $roles->classes()->attach($classesIds);
     
             // return redirect()->route('home') -> with([
             //     'success' => 'article ajoute'
@@ -132,10 +142,19 @@ class RolesController extends Controller
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'discription' => $request->discription,
-            'classes_id' => $request->classes_id,
             'image' => $role->image,
            ]);
+           
+           $classesList = $request->classes;        
+            $classes = explode(",", $classesList);
 
+            $classesIds = array();
+            foreach($classes as $classe) {
+            $classesIds[] = Classes::select('id')->where('id', $classe)->first()->id;
+            }
+           
+        $role->classes()->sync($classesIds);
+        
            return response()->json([
             'message' => 'Role Updated'
         ]);

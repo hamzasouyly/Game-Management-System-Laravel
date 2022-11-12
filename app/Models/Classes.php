@@ -9,7 +9,7 @@ class Classes extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','discription','image','slug', 'nft_id'];
+    protected $fillable = ['title','discription','image','slug', 'nft_id', 'cover', 'icon'];
     protected $with = ['images_male', 'images_female', 'roles', 'specialisation', 'spells'];
 
     public function getRouteKeyName(){
@@ -31,7 +31,7 @@ class Classes extends Model
 
     public function roles() {
 
-        return $this->hasMany(Roles::class);
+        return $this->belongsToMany(Roles::class, 'classes_roles');
     }
 
     public function specialisation() {

@@ -9,7 +9,7 @@ class Roles extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','discription', 'image', 'classes_id', 'slug'];
+    protected $fillable = ['title','discription', 'image', 'slug'];
 
     public function getRouteKeyName(){
         return 'slug';
@@ -17,6 +17,6 @@ class Roles extends Model
 
     public function classes() {
 
-        return $this->hasMany(Classes::class);
+        return $this->belongsToMany(Classes::class, 'classes_roles');
     }
 }

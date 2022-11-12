@@ -59,11 +59,23 @@ class SpecialisationController extends Controller
             //     }
             // }
 
+            // $sync_data = [];
+            // $classes = $request->classes;
+            // for($i = 0; $i < array($classes); $i++)
+            // $sync_data[$classes[$i]];
+
+            // Get the tag ids from the the tags table in the database
+
+            $classesList = $request->classes;        
+            $classes = explode(",", $classesList);
+
+            $classesIds = array();
+            foreach($classes as $classe) {
+            $classesIds[] = Classes::select('id')->where('id', $classe)->first()->id;
+            }
+
             
-            // $classes = Classes::find([$request->classes]);
-            // $classes= Classes::find($request->classes);
-            // $data = json_decode($request->classes);
-            $specialisation->classes()->attach($request->classes);
+            $specialisation->classes()->attach($classesIds);
             
     
             // return redirect()->route('home') -> with([
@@ -119,8 +131,16 @@ class SpecialisationController extends Controller
             'slug' => Str::slug($request->title),
             // 'classes_id' => $request->classes_id,
            ]);
+
+           $classesList = $request->classes;        
+            $classes = explode(",", $classesList);
+
+            $classesIds = array();
+            foreach($classes as $classe) {
+            $classesIds[] = Classes::select('id')->where('id', $classe)->first()->id;
+            }
            
-        $specialisation->classes()->sync($request->classes);
+        $specialisation->classes()->sync($classesIds);
 
            return response()->json([
             'message' => 'specialisation Updated'

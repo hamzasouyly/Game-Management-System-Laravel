@@ -56,22 +56,6 @@ class ClassesController extends Controller
             $file = $request->image;
             $image_name = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/backgrounds'), $image_name);
-
-            $this->validate($request, [
-                'title' => 'required|max:255',
-                'discription' => 'required|min:10',
-            ]);
-            
-            $classes =new Classes([
-                'title' => $request->title,
-                'slug' => Str::slug($request->title),
-                'discription' => $request->discription,
-                'image' => $image_name,
-                // 'user_id' => auth()->user()->id,
-                'nft_id' => $request->nft_id,
-            ]);
-           $classes->save();
-
             // Classes::create([
             //     'title' => $request->title,
             //     'slug' => Str::slug($request->title),
@@ -81,6 +65,35 @@ class ClassesController extends Controller
             //     'nft_id' => $request->nft_id,
             //     ]);
         }
+
+        if ($request->has('cover')) {
+            $file = $request->cover;
+            $cover_name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/cover'), $cover_name);
+        }
+
+        if ($request->has('icon')) {
+            $file = $request->icon;
+            $icon_name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/icon'), $icon_name);
+        }
+
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'discription' => 'required|min:10',
+        ]);
+        
+        $classes = Classes::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'discription' => $request->discription,
+            'image' => $image_name,
+            // 'user_id' => auth()->user()->id,
+            'nft_id' => $request->nft_id,
+            'cover' => $cover_name,
+            'icon' => $icon_name,
+        ]);
+       $classes->save();
 
         // images male
 
@@ -169,6 +182,22 @@ class ClassesController extends Controller
             unlink(public_path('uploads/backgrounds') . '/' . $class->image);
             $class->image = $image_name;
         }
+
+        if($request->hasFile("cover")){
+            $file = $request->cover;
+            $cover_name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/cover'), $cover_name);
+            unlink(public_path('uploads/cover') . '/' . $class->cover);
+            $class->cover = $cover_name;
+        }
+
+        if($request->hasFile("icon")){
+            $file = $request->icon;
+            $icon_name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/icon'), $icon_name);
+            unlink(public_path('uploads/icon') . '/' . $class->icon);
+            $class->icon = $icon_name;
+        }
    
         $this->validate($request, [
             'title' => 'required|max:255',
@@ -180,6 +209,8 @@ class ClassesController extends Controller
             'slug' => Str::slug($request->title),
             'discription' => $request->discription,
             'image' => $class->image,
+            'cover' => $class->cover,
+            'icon' => $class->icon,
             // 'user_id' => auth()->user()->id,
             'nft_id' => $request->nft_id,
            ]);
@@ -281,6 +312,20 @@ class ClassesController extends Controller
         if (file_exists(public_path('uploads/backgrounds') . '/' . $class->image)) {
             
             unlink(public_path('uploads/backgrounds') . '/' . $class->image);
+            
+
+        }
+
+        if (file_exists(public_path('uploads/cover') . '/' . $class->cover)) {
+            
+            unlink(public_path('uploads/cover') . '/' . $class->cover);
+            
+
+        }
+
+        if (file_exists(public_path('uploads/icon') . '/' . $class->icon)) {
+            
+            unlink(public_path('uploads/icon') . '/' . $class->icon);
             
 
         }
